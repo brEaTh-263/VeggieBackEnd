@@ -215,46 +215,6 @@ router.post("/check-validity-password", auth, async (req, res) => {
   }
 });
 
-// router.post("/add-to-cart", auth, async (req, res) => {    //QUANTITY ADDED BY 1
-//   let { productId } = req.body;
-//   const { _id } = req.user;
-//   try {
-//     if (!productId) {
-//       return res.status(400).send("All details were not provided");
-//     }
-//     let user = await User.findById(_id);
-//     let product = await Product.findById(productId);
-//     console.log(product);
-//     user.totalAmount += product.price;
-//     if (user.cartProducts.length)
-//       for (let i = 0; i < user.cartProducts.length; i++) {
-//         if (user.cartProducts[i].productId.equals(productId)) {
-//           //checking if that product already exists then increasing only the quantity of it
-//           user.cartProducts[i].quantity += 1;
-//           await user.save();
-//           return res.status(200).send({
-//             status: "Added successfully in cart",
-//             totalAmount: user.totalAmount,
-//             cartProducts: user.cartProducts,
-//           });
-//         }
-//       }
-//     user.cartProducts.push({
-//       productId: productId,
-//       quantity: 1,
-//     });
-//     await user.save();
-//     return res.status(200).send({
-//       status: "Added successfully in cart",
-//       totalAmount: user.totalAmount,
-//       cartProducts: user.cartProducts,
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(505).send(err.message);
-//   }
-// });
-
 router.post("/add-to-cart", auth, async (req, res) => {
   let { productId, qty, isKg } = req.body;
   const { _id } = req.user;
@@ -491,89 +451,6 @@ router.post("/remove-from-cart-no-auth", async (req, res) => {
     return res.status(505).send(err.message);
   }
 });
-
-// router.post("/remove-from-cart-no-auth", async (req, res) => {
-//   let { productId, cartProducts, totalAmount } = req.body;
-
-//   if (!productId) {
-//     return res.status(200).send({ Error: "All details were not provided" });
-//   }
-
-//   try {
-//     let product = await Product.findById(productId);
-//     totalAmount -= product.price;
-//     for (let i = 0; i < cartProducts.length; i++) {
-//       if (cartProducts[i].productId === productId) {
-//         cartProducts[i].quantity -= 1;
-//         if (cartProducts[i].quantity === 0) {
-//           const editedCartProducts = cartProducts.filter((item) => {
-//             if (item.productId === productId) {
-//               return false;
-//             } else {
-//               return true;
-//             }
-//           });
-
-//           cartProducts = editedCartProducts;
-//         }
-//         return res.status(200).send({
-//           status: "Removed from cart",
-//           totalAmount: totalAmount,
-//           cartProducts: cartProducts,
-//         });
-//       }
-//     }
-
-//     return res.status(400).send({
-//       status: "Item not found",
-//     });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(505).send(err.message);
-//   }
-// });
-
-// router.post("/remove-from-cart", auth, async (req, res) => {
-//   let { productId } = req.body;
-//   const { _id } = req.user;
-//   try {
-//     if (!productId) {
-//       return res.status(400).send("All details were not provided");
-//     }
-//     let user = await User.findById(_id);
-//     let product = await Product.findById(productId);
-//     user.totalAmount -= product.price;
-//     if (user.cartProducts.length)
-//       for (let i = 0; i < user.cartProducts.length; i++) {
-//         if (user.cartProducts[i].productId.equals(productId)) {
-//           //checking if that product already exists then decreasing only the quantity of it
-//           user.cartProducts[i].quantity -= 1;
-//           if (user.cartProducts[i].quantity === 0) {
-//             const editedCartProducts = user.cartProducts.filter((item) => {
-//               if (item.productId.equals(productId)) {
-//                 return false;
-//               } else {
-//                 return true;
-//               }
-//             });
-
-//             user.cartProducts = editedCartProducts;
-//           }
-//           await user.save();
-//           return res.status(200).send({
-//             status: "Removed from cart",
-//             totalAmount: user.totalAmount,
-//             cartProducts: user.cartProducts,
-//           });
-//         }
-//       }
-
-//     return res.status(400).send("Item not found");
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(505).send(err.message);
-//   }
-// });
 
 router.post("/add-bookmark", auth, async (req, res) => {
   let { id } = req.body;

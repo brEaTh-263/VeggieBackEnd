@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../services/image");
+const { upload } = require("../services/image");
 const auth = require("../middlewares/auth");
 const { User } = require("../models/user");
 const _ = require("lodash");

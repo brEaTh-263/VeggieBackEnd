@@ -6,7 +6,7 @@ const stockSchema = new mongoose.Schema({
   priceQty: Number,
   priceKg: Number,
   quantity: Number,
-  imageUri: String,
+  imageUrl: String,
   Category: String,
   weightOnly: Boolean,
   subCategory: String,

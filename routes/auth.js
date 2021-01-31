@@ -19,29 +19,6 @@ const mailgun = require("mailgun-js")({ apiKey: API_KEY, domain: DOMAIN });
 
 const router = express.Router();
 
-// router.post("/signUp", async (req, res) => {
-//   let { name, email, password } = req.body;
-//   console.log(req.body);
-//   console.log(name, email, password);
-
-//   let user = await User.findOne({ email: email });
-//   if (user) {
-//     return res.status(400).send({ Error: "Please try another email" });
-//   }
-//   try {
-//     user = new User({ name: name, email: email, password: password });
-
-//     const salt = await bcrypt.genSalt(10);
-//     user.password = await bcrypt.hash(user.password, salt);
-//     user = await user.save();
-//     const token = user.generateAuthToken();
-//     const details = _.pick(user, ["name", "email", "phoneNumber", "location"]);
-//     return res.status(200).send({ details, id: user._id, tokenId: token });
-//   } catch (err) {
-//     return res.status(505).send(err.message);
-//   }
-// });
-
 router.post("/signup-phonenumber", async (req, res) => {
   let { phoneNumber } = req.body;
   if (!phoneNumber) {
@@ -285,32 +262,6 @@ router.get("/autoLogIn", auth, async (req, res) => {
   }
 });
 
-// router.post("/signIn", async (req, res) => {
-//   let { email, password } = req.body;
-//   if (!email || !password) {
-//     return res
-//       .status(400)
-//       .send({ Error: "Please provide both email and password" });
-//   }
-//   let user = await User.findOne({ email: email });
-
-//   if (!user) {
-//     return res.status(403).send({ Error: "Invalid email or password" });
-//   }
-//   try {
-//     let validPassword = await bcrypt.compare(password, user.password);
-//     if (!validPassword) {
-//       return res.status(403).send({ Error: "Invalid email or password" });
-//     }
-//     const token = user.generateAuthToken();
-//     const details = _.pick(user, ["name", "email"]);
-//     // console.log(token);
-//     return res.status(200).send({ tokenId: token, id: user._id, details });
-//   } catch (err) {
-//     return res.send(err.message);
-//   }
-// });
-
 router.post("/googleSignIn", async (req, res, next) => {
   const client = new OAuth2Client(
     "203648099645-b4i0peicvdhem6mfbirlapb27aa9r8ed.apps.googleusercontent.com"
@@ -369,93 +320,5 @@ router.post("/facebookSignIn", async (req, res) => {
     return res.status(500).send({ Error: "Something went wrong" });
   }
 });
-
-// router.post("/forgot-password", async (req, res, next) => {
-//   // console.log("Waiting for hash");
-//   // console.log(req.body.hash);
-//   try {
-//     let email = req.body.email;
-//     if (!email) {
-//       return res.status(400).send({ Error: "Email was not provided" });
-//     }
-//     let user = await User.findOne({ email: email });
-//     if (!user) {
-//       return res.status(400).send({ Error: "Email not found" });
-//     }
-//     let profileDetails = _.pick(user, ["phoneNumber", "email"]);
-
-//     let first6 = `${profileDetails.phoneNumber}`.substring(0, 6);
-//     let newNum = `${profileDetails.phoneNumber}`.replace(first6, "******");
-
-//     console.log(profileDetails);
-//     const data = await client.verify.services(serviceSid).verifications.create({
-//       to: `+91${profileDetails.phoneNumber}`,
-//       channel: "sms",
-//       // appHash: `${req.body.hash}`,
-//     });
-//     const OtpDetails = _.pick(data, ["status", "to", "valid"]);
-//     profileDetails.phoneNumber = newNum;
-//     return res.status(200).send({ OtpDetails, profileDetails });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(400).send({ Error: "Something went wrong" });
-//   }
-// });
-
-// router.post("/verify-status", async (req, res) => {
-//   console.log(req.body);
-//   // const { _id } = req.user;
-
-//   try {
-//     const { code } = req.body;
-//     if (!code) {
-//       throw new Error();
-//     }
-//     let email = req.body.email;
-//     let user = await User.findOne({ email: email });
-//     const data = await client.verify
-//       .services(serviceSid)
-//       .verificationChecks.create({
-//         to: `+91${user.phoneNumber}`,
-//         code: req.body.code,
-//       });
-//     console.log(data);
-//     if (data.status === "approved") {
-//       let user = await User.findOne({ email: email });
-
-//       const token = user.generateAuthToken();
-//       return res.status(200).send({ token });
-//     }
-//     // const details = _.pick(data, ["status", "to", "valid"]);
-//   } catch (error) {
-//     console.log(error);
-//     const details = {
-//       status: "Failed",
-//     };
-//     return res.status(400).send({ details });
-//   }
-// });
-
-// router.post("/new-password", auth, async (req, res) => {
-//   let { password } = req.body;
-//   const { _id } = req.user;
-//   console.log(req.body);
-//   // console.log(name, email, password);
-//   try {
-//     let user = await User.findById(_id);
-//     if (!user || !password) {
-//       return res.status(400).send({ Error: "Something is missing" });
-//     }
-
-//     const salt = await bcrypt.genSalt(10);
-//     user.password = await bcrypt.hash(password, salt);
-//     user = await user.save();
-//     const token = user.generateAuthToken();
-//     return res.status(200).send({ token });
-//   } catch (err) {
-//     console.log(err);
-//     return res.status(500).send(err.message);
-//   }
-// });
 
 module.exports = router;

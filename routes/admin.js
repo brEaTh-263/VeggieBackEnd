@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const { Product } = require("../models/Product");
 const _ = require("lodash");
 const jwt = require("jsonwebtoken");
+const { uploadProductPic, addProductPic } = require("../services/image");
 
 const router = express.Router();
 
@@ -34,12 +35,13 @@ router.post("/edit-product", admin, async (req, res) => {
     indianName,
     category,
     subCategory,
-    imageUrl,
     quantity,
-    price,
+    priceKg,
+    priceQty,
+    weightOnly,
   } = req.body;
   try {
-    const product = await Product.findById(_id);
+    let product = await Product.findById(_id);
     if (!product) {
       return res.status(400).send("Product not found");
     }
@@ -47,14 +49,16 @@ router.post("/edit-product", admin, async (req, res) => {
     product.indianName = indianName;
     product.Category = category;
     product.subCategory = subCategory;
-    product.price = price;
+    product.priceKg = priceKg;
+    product.priceQty = priceQty;
+    product.weightOnly = weightOnly;
     product.quantity = quantity;
-    product.imageUrl = imageUrl;
-    await product.save();
-    return res
-      .status(200)
-      .send({ status: "Product edited successfully", product: product });
+    product = await product.save();
+    console.log(product);
+
+    return res.status(200).send({ product });
   } catch (error) {
+    console.log(error);
     return res.status(400).send("Something went wrong");
   }
 });
@@ -78,36 +82,31 @@ router.post("/add-product", admin, async (req, res) => {
     subCategory,
     name,
     indianName,
-    price,
+    priceKg,
+    priceQty,
+    weightOnly,
     quantity,
-    imageUrl,
   } = req.body;
   try {
-    console.log(
-      Category,
-      subCategory,
-      name,
-      indianName,
-      price,
-      quantity,
-      imageUrl
-    );
     let productExists = await Product.findOne({
       name: name,
       Category: Category,
     });
     if (!productExists) {
-      const product = new Product({
+      let product = new Product({
         name,
         indianName,
-        price,
+        priceKg,
+        priceQty,
+        weightOnly,
         quantity,
         Category,
         subCategory,
-        imageUrl,
       });
-      await product.save();
-      return res.status(200).send({ status: "Product added successfully" });
+      product = await product.save();
+      return res.status(200).send({
+        product,
+      });
     } else {
       return res.status(400).send({
         status: "Product already exists with that name within that category",
@@ -116,6 +115,45 @@ router.post("/add-product", admin, async (req, res) => {
   } catch (error) {
     console.log(error);
     return res.status(400).send({ Error: "Something went wrong" });
+  }
+});
+
+const singleUpload = uploadProductPic.single("image");
+
+router.post("/edit-product-pic", admin, singleUpload, async (req, res) => {
+  const _id = req.header("product-id");
+  console.log(req.file);
+  try {
+    let product = await Product.findById(_id);
+    if (!product) {
+      return res.status(404).send({ Error: "Product not found!" });
+    }
+    product.imageUrl = req.file.location;
+    product = await product.save();
+    console.log(product);
+    return res.status(200).send({ product });
+  } catch (err) {
+    console.log(err);
+    return res.status(505).send({ Error: "Something went wrong" });
+  }
+});
+
+const singleUploadAdd = addProductPic.single("image");
+
+router.post("/add-product-pic", admin, singleUploadAdd, async (req, res) => {
+  const { _id } = req.body;
+  try {
+    let product = await Product.findById(_id);
+    if (!product) {
+      return res.status(404).send({ Error: "Product not found!" });
+    }
+    product.imageUrl = req.file.location;
+    product = await product.save();
+    console.log(product);
+    return res.status(200).send({ product });
+  } catch (err) {
+    console.log(err);
+    return res.status(505).send({ Error: "Something went wrong" });
   }
 });
 
