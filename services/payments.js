@@ -1,6 +1,6 @@
 const Stripe = require("stripe");
 const stripe = Stripe(
-  "sk_test_51HfMg9LZnc45DmOrQ6y9RGGE94OdMp5AC5TX379dBvNulgIzOFG3SMfK8YDf4SRkmdb4xxH5eb4JFXDflVzSBrqm00LuODTrWN"
+ STRIPE_SECRET_KEY
 );
 const express = require("express");
 
