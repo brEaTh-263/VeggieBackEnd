@@ -1,6 +1,6 @@
-const accountSid = "AC35241667cea434d2350688bba31a0896"; //twilio
-const serviceSid = "VAcc4bb017a484ea7a9184262bcdb80985"; //twilio
-const authToken = "a630c571f94f22b4d69b0c6397d5f611"; //twilio
+const accountSid =ACCOUNT_SID; //twilio
+const serviceSid = SERVICE_SID; //twilio
+const authToken = AITH_TOKEN; //twilio
 const client = require("twilio")(accountSid, authToken);
 const express = require("express");
 const { User } = require("../models/user");
