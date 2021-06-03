@@ -8,13 +8,13 @@ const _ = require("lodash");
 const fetch = require("node-fetch");
 const { OAuth2Client, IdTokenClient } = require("google-auth-library");
 const auth = require("../middlewares/auth");
-const accountSid = "AC35241667cea434d2350688bba31a0896"; //twilio
-const serviceSid = "VAcc4bb017a484ea7a9184262bcdb80985"; //twilio
-const authToken = "a630c571f94f22b4d69b0c6397d5f611"; //twilio
+const accountSid = ACCOUNT_SID; //twilio
+const serviceSid = SERVICE_SID; //twilio
+const authToken = AUTH_TOKEN; //twilio
 const client = require("twilio")(accountSid, authToken); //twilio
 
-const API_KEY = "2c0d814e03cbe9fef8918dcab95f4779-360a0b2c-efb4f165";
-const DOMAIN = "sandbox5b2075e1b883406383f380da7dc7d380.mailgun.org";
+const API_KEY = API_KEY;
+const DOMAIN = DOMAIN;
 const mailgun = require("mailgun-js")({ apiKey: API_KEY, domain: DOMAIN });
 
 const router = express.Router();
